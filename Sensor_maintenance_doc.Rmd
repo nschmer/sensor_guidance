@@ -1,0 +1,251 @@
+---
+title: "Sensor Maintenance Documentation"
+author: "Natalie Schmer"
+date: "7/4/2020"
+documentclass: book
+output:
+  bookdown::gitbook: default
+editor_options: 
+  chunk_output_type: console
+---
+```{r, include=FALSE}
+library(sf)
+library(tidyverse)
+library(googlesheets4)
+
+sensorcoords <- read_csv("/Users/natalieschmer/Desktop/GitHub/sensors/Data/sensor_coords.csv")
+```
+
+
+# Site locations and access notes: 
+**Remember to bring sensor keys to lock/unlock caps and pvc pipe**
+
+Each sensor and trail camera (eventually) should have a laminated tag, double check it's there and bring extra tags/ zipties in case.  
+
+## Going downstream:
+
+Site Map:
+```{r, echo=FALSE}
+Locations <- sensorcoords %>%
+                  dplyr::slice(-8:-10) %>% 
+                  dplyr::select(long, lat, site) %>% 
+                  rename(Longitude= long,
+                         Latitude= lat,
+                         id= site) %>% 
+                        st_as_sf(coords= c("Longitude", "Latitude"), crs = 4326)
+
+mapview::mapview(Locations) 
+```
+
+
+### CSU Mountain campus, AT 600
+  - Coordinate with Kira Putenney-Desmond for installation, removal, and data retrieval
+    - Typically installed in May, removed in October 
+  - Sensor and telemetry are in a “L” type configuration ![](/Users/natalieschmer/Desktop/riverpics/mtncampus.jpg) 
+
+
+### Rist Canyon Rd, AT 600, trail cam epoxied to bridge support
+  - Sensor and telemetry is in “L” shape
+  - Sensor: In stream, lock is near support for bridge. Bring something with you (ex. trekking pole or similar) that can be extended or is otherwise long enough to push the sensor back out into the stream. May have to get in in order to accomplish this. Pipe is anchored to 3 large rocks on bed. 
+  - Tube: Might need to bring a stool or be prepared to stack rocks in order to reach the tube to unlock
+
+![](/Users/natalieschmer/Desktop/riverpics/IMG_4201.jpg)
+
+
+### Legacy Bridge in Salyer Natural Area, AT 600
+  - Sensor and telemetry is in “L” shape 
+  - Sensor: In stream, lock is near wall of bridge, pipe anchored to large rocks on bed 
+    - If too deep to safely access, check back on weekends when canals are active, typically will be lower then 
+  - Telemetry: Need to sit on edge of bridge to access, do not lift too much out of the pvc or else it will be difficult to get back in 
+    - If too much excess cord from bringing it up, will need to open the sensor at the bottom to pull cord and tube down 
+    - Difficult to get tube back in, need to push the pvc around a little bit 
+
+![](/Users/natalieschmer/Desktop/riverpics/IMG_4048.jpg)
+    
+
+### Timberline in Riverbend Ponds Natural Area, AT 500 (City)
+  - Sensor and telemetry is on an angle going into the water
+  - Sensor: Access from lock that is a few feet out of the water
+  - Tube: Access at the end of the pvc that is out of the water, hidden in a bush 
+![](/Users/natalieschmer/Desktop/riverpics/timberline2.jpg)   
+
+
+### Prospect Rd Bridge, AT 500, trail cam epoxied to bridge (City)
+  - Sensor and telemetry is going vertical into the water 
+  - Sensor: Pull up from top, bring something with to help push it back in or have waders and be prepared to get in and try to pull down, but this is difficult 
+- Tube: Pull up from top
+
+![](/Users/natalieschmer/Desktop/riverpics/IMG_2535.jpg) 
+
+### CSU Environmental Learning Center, AT 600, trail cam across river in Running Deer Natural Area in a tree
+  - Sensor and telemetry are in a “L” type configuration
+  - Sensor: Bring wrench, need to get into the river to unscrew sensor pipe. Also remember to loosen screws on the “u” brackets when pulling sensor and retighten when leaving, and to have arms pointing straight down 
+  - Tube: Unscrew top, remove nut from horizontal screw and take screw out. Bring a carabiner to clip through eyelet screw to keep from falling down pipe 
+![](/Users/natalieschmer/Desktop/riverpics/elcjpeg.jpg)  
+
+
+### City of Fort Collins Archery Range, AT 500 (City) (but had 600 for a while), trail cam epoxied to bridge 
+  - Sensor and telemetry go straight into the water
+  - Sensor: Pull up from top 
+  - Tube: Pull up from top
+![](/Users/natalieschmer/Desktop/riverpics/IMG_4094.jpg)
+
+# Maintenance Schedule and tasks
+
+I need to re format the sheet so all sites are on one but this is the format I have so far  
+```{r, echo=FALSE}
+googlesheets4::gs4_auth()
+read_sheet("https://docs.google.com/spreadsheets/d/1jDkIb6IUtftwXVCrudhaM2GWEh49gwwey8fojhijh7A/edit#gid=190455182")
+```
+
+## General warnings and procedures
+
+- Safety: Safety is priority. Bringing someone with is encouraged if needed, and if the water is too swift, too high, or the weather is bad, reschedule your work 
+
+- Always bring caps and tape for the sensor and cables so if you drop them in the water they will be fine. If they do end up dropping into the water, just make sure it is completely dry before reconnecting 
+
+- Installs also have pins in the bottom to keep sensors from slipping out. The pin should not need to be removed unless the whole pvc is being replaced. If it is removed, remember to put it back 
+
+- If weather is favorable for ice, keep tabs on temperature via Hydrovu or going to the field and be ready to pull them if needed 
+
+- If data on Hydrovu looks strange in any way, go to site and check it out 
+
+- External voltage shows the battery in the tube, needs replacing when approached 9.5 v 
+
+- Everything is also outlined in the manuals for each instrument 
+
+## Setup 
+### Sensors 
+### AT 500’s: 
+- Make sure battery pack is charged
+- Connect to battery pack
+- Instrument settings → Go through each variable and for most, use default settings 
+- For “communication” be sure to set cube/tube address to 1- this tells the sensor to look for the tube 
+
+### AT 600’s 
+- Same as 500’s, except do not need battery pack and need to set up the log
+- Log: Logging → Schedule a start that is on the nearest quarter hour and takes a reading every 15 minutes 
+
+### Tubes
+Need IP adress, password, for Hydrovu. 
+Miles will walk me through this unless we need it ASAP
+
+![](/Users/natalieschmer/Desktop/Sensors/server.png)
+
+![](/Users/natalieschmer/Desktop/Sensors/server2.png) 
+
+# Calibrations and tasks 
+The measurements on each sonde setup that we are concerned with include:
+1. Oxygen
+a. Saturation 
+b. Concentration 
+2. Temperature
+3. pH
+4. Turbidity
+5. Depth
+6. Specific Conductivity 
+7. Barometric pressure, this comes from the tube 
+
+Each variable requires different levels of maintenance, maintenance schedule is organized based on which sensor needs calibration, when. 
+- pH, ORP, and DO should be calibrated every 10-12 weeks (per in-situ), so every 2-3 months or so
+
+- Turbidity and conductivity as determined by user, so we decided on every other calibration which would be about every 4-5 months. 
+
+In-Situ also recommends factory calibration every 12 months or so, or with significant drift: includes a thorough cleaning, full functionality check and sensor adjustments to all applicable sensors over the entire calibrated temperature range.
+
+## General calibration notes: 
+- For 600’s, pause/ the log before calibrations and REMEMBER TO RESUME/ CREATE NEW LOG clearly labelled with date 
+
+- Use the VuSitu mobile app for all calibrations. This is a very user friendly app that will walk the user through each calibration procedure
+
+- After calibration, email yourself the calibration report and upload to google drive, add calibration date and any relevant notes to google spreadsheet 
+
+- Batteries: Cold weather can mess with the battery readings, so it's a good idea to always have extra batteries because might not be accurate on hydrovu 
+
+- Always take a live reading via the tube before leaving
+
+- Keep track on calibration solutions and put in purchase request/ order when running low 
+
+## Trail Cameras
+Trail cams are located at Rist, Prospect, ELC, and Archery Range. Go with the laptop and connection cable to collect imagery every 2 weeks or so and when downloaded delete off camera to save space. Upload imagery to google drive. 
+
+After heavy rain/wind/storms, go check camera position and possible photo obstructions.
+
+## Tasks 
+
+### Daily
+Check Hydrovu data feed to verify all sensors are live, sending in data, and that the data makes sense. If data looks questionable, go check sensor ASAP. 
+
+Over time, also watch for drift (primarily an issue with turbidity)
+
+### Weekly (if needed) but at least monthly, 1-2x
+Go to sites and check sensors for blockages, ice, etc that could impair data quality
+
+### Every 2 months
+Calibrations: 
+- DO probe with single point calibration (100%)- water on sponge  
+
+- pH and ORP probes with in-situ provided solution-  4, 7 ,10, ORP 
+
+- Check battery level, replace when batteries go below 20% 
+
+- If maintenance is before snowmelt (generally starting in April/May) then batteries should have at least 30% since field access may be limited from May-July due to high water levels. 
+
+- Always have extra batteries in case, cold weather can mess with battery level readings 
+
+### Every 4 months
+Calibrations: 
+- Turbidity with in-Situ solutions @ 10, 100, or 1000 NTU
+- Specific solution will depend on site, check hydrovu for the NTU range 
+
+- Specific Conductivity with in-Situ solutions @ 147, 1413, or 12890 uS/cm 
+Specific solution will depend on site, check hydrovu for the uS/cm range
+
+- Before calibrating, take readings of the standards and recors, will be useful when assessing and correcting drift 
+
+- When calibrating sc and turbidity, calibrate higher if between standard values and only do 1 point 
+  
+  
+# Troubleshooting
+Typically, if something is wrong, it will be obvious because the data will look weird (ex. Drops to 0) or will have missed an upload. 
+
+When in doubt, call tech support, but some troubleshooting that has worked in the past or can at least give some insight to the possible issues include:
+- If uploading 0’s or not uploading
+    - Power cycle: Pull data off tube, clear log memory, save configuration, unplug battery for ~1 min, plug back in, restore factory settings, restore configuration, sync clock, start/stop device, take immediate reading 
+
+- Be sure to check external voltage on hydrovu, might be a tube battery issue (should not be below 9.5 v)
+
+- Ftp test: Will tell if can send data 
+
+- Instant readings: Making sure each individual sensor is working and can be read by tube
+
+- Activate modem and signal strength- sometimes the antenna gets a bit loose when pulling out and putting back the tubes 
+
+# Repairs 
+If a sensor or tube needs to be sent in:
+- Create RMA request and send to in-situ (need to upload blank copy to drive, email is on form)
+
+- Be sure to know serial number of what you are sending in 
+
+- In-Situ will send back RMA number, save this for records (ex. email folder)
+
+- Request a rental replacement for whatever needs to be sent in 
+
+- When instrument needing repair gets dropped off, put in spreadsheet when it was dropped off 
+
+- See “setting up the sensors” or “setting up the tubes” for how to connect rental
+
+- Take a live reading via laptop before leaving
+Will be able to name the log, use format of “site_date_rental” 
+
+# Notes on downloading data
+Data is downloaded off hydrovu and gap filled with data directly from 600’s and/or data from tubes
+
+When downloading from hydrovu, probably best to partition the download as sensors/ tubes in their own folders OR download all the sensors as one download and tubes as the other since they get named differently and then read each set of files in separately and join in R after cleaning up the column names  
+
+```{r, echo = F}
+bookdown::render_book('Sensor_maintenance_doc.Rmd', "bookdown::gitbook")
+```
+
+
+  
